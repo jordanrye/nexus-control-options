@@ -9,18 +9,8 @@
 #include "settings.h"
 #include "resource.h"
 
-namespace Tasks
+namespace
 {
-	/* State */
-	bool isManualAdjustZoom = false;
-
-	/* Textures */
-	Texture* TexDblClk_0 = nullptr;
-	Texture* TexDblClk_1 = nullptr;
-	Texture* TexDblClk_2 = nullptr;
-	Texture* TexDblClk_3 = nullptr;
-	Texture* TexDblClk_4 = nullptr;
-
 	static bool isTimeoutElapsed(std::chrono::system_clock::duration timeout)
 	{
 		return (timeout < std::chrono::system_clock::now().time_since_epoch());
@@ -37,6 +27,19 @@ namespace Tasks
 		}
 		return false;
 	}
+} // namespace
+
+namespace Tasks
+{
+	/* State */
+	bool isManualAdjustZoom = false;
+
+	/* Textures */
+	Texture* TexDblClk_0 = nullptr;
+	Texture* TexDblClk_1 = nullptr;
+	Texture* TexDblClk_2 = nullptr;
+	Texture* TexDblClk_3 = nullptr;
+	Texture* TexDblClk_4 = nullptr;
 
 	void DodgeJump(const char* aIdentifier, bool aIsRelease)
 	{
