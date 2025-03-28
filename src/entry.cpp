@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <d3d11.h>
 #include <filesystem>
 #include <future>
 #include <fstream>
@@ -19,7 +20,6 @@
 void OnMumbleIdentityUpdated(void* aEventArgs);
 void AddonLoad(AddonAPI* aApi);
 void AddonUnload();
-UINT AddonWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void AddonRender();
 void AddonOptions();
 
@@ -78,6 +78,10 @@ void AddonLoad(AddonAPI* aApi)
 	NexusLink = (NexusLinkData*)APIDefs->DataLink.Get("DL_NEXUS_LINK");
 	MumbleLink = (Mumble::Data*)APIDefs->DataLink.Get("DL_MUMBLE_LINK");
 
+	DXGI_SWAP_CHAIN_DESC desc{};
+    ((IDXGISwapChain*)APIDefs->SwapChain)->GetDesc(&desc);
+    hClient = desc.OutputWindow;
+
 	APIDefs->Events.Subscribe("EV_MUMBLE_IDENTITY_UPDATED", OnMumbleIdentityUpdated);
 
 	APIDefs->Renderer.Register(ERenderType_Render, AddonRender);
@@ -95,16 +99,12 @@ void AddonLoad(AddonAPI* aApi)
 	APIDefs->Localization.Set("KB_CO_TOGGLE_DOUBLE_CLICK", "en", "Toggle Double-Click");
 	APIDefs->Localization.Set("KB_CO_MANUAL_ADJUST_ZOOM", "en", "Manually Adjust Zoom");
 
-	APIDefs->WndProc.Register(AddonWndProc);
-
 	std::filesystem::create_directory(APIDefs->Paths.GetAddonDirectory("ControlOptions"));
 	Settings::Load(APIDefs->Paths.GetAddonDirectory("ControlOptions/settings.json"));
 }
 
 void AddonUnload()
 {
-	APIDefs->WndProc.Deregister(AddonWndProc);
-
 	APIDefs->InputBinds.Deregister("KB_CO_DODGE_JUMP");
 	APIDefs->InputBinds.Deregister("KB_CO_MOVE_ABOUT_FACE");
 	APIDefs->InputBinds.Deregister("KB_CO_HOLD_DOUBLE_CLICK");
@@ -116,44 +116,12 @@ void AddonUnload()
 
 	APIDefs->Events.Unsubscribe("EV_MUMBLE_IDENTITY_UPDATED", OnMumbleIdentityUpdated);
 
+	hClient = nullptr;
+
 	MumbleLink = nullptr;
 	NexusLink = nullptr;
 
 	Settings::Save();
-}
-
-UINT AddonWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	// set window handle
-	hClient = hWnd;
-
-	if (Settings::isSettingKeybind)
-	{
-		if (WM_KEYDOWN == uMsg || WM_SYSKEYDOWN == uMsg)
-		{
-			Keybind kb {};
-
-			kb.Alt = GetKeyState(VK_MENU) & 0x8000;
-			kb.Ctrl = GetKeyState(VK_CONTROL) & 0x8000;
-			kb.Shift = GetKeyState(VK_SHIFT) & 0x8000;
-			kb.Key = Keybinds::GetKeyStateFromLParam(lParam);
-
-			// if shift, ctrl or alt set key to 0
-			if (wParam == VK_SHIFT || wParam == VK_CONTROL || wParam == VK_MENU)
-			{
-				kb.Key = 0;
-				if (wParam == VK_SHIFT) { kb.Shift = true; }
-				if (wParam == VK_CONTROL) { kb.Ctrl = true; }
-				if (wParam == VK_MENU) { kb.Alt = true; }
-			}
-
-			Settings::CurrentKeybind = kb;
-
-			return 0;
-		}
-	}
-
-	return uMsg;
 }
 
 void AddonRender()

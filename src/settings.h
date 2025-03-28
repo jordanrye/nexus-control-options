@@ -19,10 +19,6 @@ namespace Settings
 	void Load(const std::filesystem::path& aPath);
 	void Save();
 
-	void KeybindButton(std::string keybindName, Keybind& keybind, std::string keybindTooltip);
-	void KeybindModal(std::string keybindName, Keybind& keybind);
-	void SettingToggle(std::string settingName, bool& setting, std::string settingTooltip);
-
 	void ToggleDoubleClickModal(std::string modalName);
 
 	/* Set Keybind */
