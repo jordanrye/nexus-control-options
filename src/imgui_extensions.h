@@ -1,62 +1,22 @@
 #ifndef IMGUI_EXTENSIONS_H
 #define IMGUI_EXTENSIONS_H
 
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
 
 namespace ImGui
 {
-	static ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs)
-	{
-		return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y);
-	}
-	
-	static bool Tooltip()
-	{
-		bool hovered = ImGui::IsItemHovered();
-		if (hovered)
-		{
-			ImGui::BeginTooltip();
-		}
-		return hovered;
-	}
+    bool Tooltip();
+    void TooltipGeneric(const char* str, ...);
 
-	static void TooltipGeneric(const char* str, ...)
-	{
-		if (ImGui::Tooltip())
-		{
-			ImGui::Text(str);
-			ImGui::EndTooltip();
-		}
-	}
+    void TextPadded(const char* str, float paddingX, float paddingY);
+    void TextWrappedPadded(const char* str, float paddingX, float paddingY);
 
-	static void TextPadded(const char* str, float paddingX, float paddingY)
-	{
-		ImVec2 textSize = ImGui::CalcTextSize(str);
-		ImVec2 cursorStart = ImGui::GetCursorPos();
-		ImGui::InvisibleButton("##TextPadded", textSize + ImVec2(paddingX * 2, paddingY * 2));
-		ImVec2 cursorFinal = ImGui::GetCursorPos();
-		ImGui::SetCursorPos(cursorStart + ImVec2(paddingX, paddingY));
-		ImGui::Text(str);
-		ImGui::SetCursorPos(cursorFinal);
-	}
+    bool SelectablePadded(const char* label, bool selected, float paddingX, float paddingY);
 
-	static void TextWrappedPadded(const char* str, float paddingX, float paddingY)
-	{
-		ImVec2 textSize = ImGui::CalcTextSize(str);
-		ImVec2 cursorStart = ImGui::GetCursorPos();
-		ImGui::InvisibleButton("##TextWrappedPadded", textSize + ImVec2(paddingX * 2, paddingY * 2));
-		ImVec2 cursorFinal = ImGui::GetCursorPos();
-		ImGui::SetCursorPos(cursorStart + ImVec2(paddingX, paddingY));
-		ImGui::TextWrapped(str);
-		ImGui::SetCursorPos(cursorFinal);
-	}
-
-	static bool SelectablePadded(const char* label, bool selected, float paddingX, float paddingY)
-	{
-		//ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, {paddingX, paddingY});
-		return ImGui::Selectable(label, selected);
-		//ImGui::PopStyleVar(1);
-	}
+    void BeginGroupPanel(const char* name, const ImVec2& size);
+    void EndGroupPanel();
 
 } // namespace ImGui
 
