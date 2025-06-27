@@ -49,12 +49,12 @@ namespace Tasks
 			{
 				if (Mumble::EMountIndex::None == MumbleLink->Context.MountIndex)
 				{
-					APIDefs->GameBinds.InvokeAsync(EGameBinds_MoveJump, 0);
+					APIDefs->GameBinds.InvokeAsync(EGameBinds_MoveJump_SwimUp_FlyUp, 0);
 					APIDefs->GameBinds.InvokeAsync(EGameBinds_MoveDodge, 0);
 				}
 				else
 				{
-					APIDefs->GameBinds.InvokeAsync(EGameBinds_MoveJump, 0);
+					APIDefs->GameBinds.InvokeAsync(EGameBinds_MoveJump_SwimUp_FlyUp, 0);
 				}
 			}
 		}

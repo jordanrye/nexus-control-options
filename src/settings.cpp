@@ -25,8 +25,8 @@ namespace Settings
 			}
 			catch (json::parse_error& ex)
 			{
-				APIDefs->Log(ELogLevel_WARNING, "Extended Control Options", "settings.json could not be parsed.");
-				APIDefs->Log(ELogLevel_WARNING, "Extended Control Options", ex.what());
+				APIDefs->Log(ELogLevel_WARNING, "Control Options", "settings.json could not be parsed.");
+				APIDefs->Log(ELogLevel_WARNING, "Control Options", ex.what());
 			}
 		}
 		Mutex.unlock();

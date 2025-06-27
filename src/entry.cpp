@@ -23,24 +23,23 @@ void AddonUnload();
 void AddonRender();
 void AddonOptions();
 
-AddonDefinition AddonDef = {};
-HMODULE hSelf = nullptr;
-HWND hClient = nullptr;
+static AddonDefinition AddonDef{};
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
 	switch (ul_reason_for_call)
 	{
-	case DLL_PROCESS_ATTACH: 
-		hSelf = hModule; 
-		break;
-	case DLL_PROCESS_DETACH: 
-		break;
-	case DLL_THREAD_ATTACH: 
-		break;
-	case DLL_THREAD_DETACH: 
-		break;
+		case DLL_PROCESS_ATTACH: 
+			hSelf = hModule; 
+			break;
+		case DLL_PROCESS_DETACH: 
+			break;
+		case DLL_THREAD_ATTACH: 
+			break;
+		case DLL_THREAD_DETACH: 
+			break;
 	}
+	
 	return TRUE;
 }
 
@@ -204,7 +203,7 @@ void AddonOptions()
 						ImGui::TableNextRow();
 						ImGui::TableNextColumn();
 						bool isBoundDodge = APIDefs->GameBinds.IsBound(EGameBinds_MoveDodge);
-						bool isBoundJump = APIDefs->GameBinds.IsBound(EGameBinds_MoveJump);
+						bool isBoundJump = APIDefs->GameBinds.IsBound(EGameBinds_MoveJump_SwimUp_FlyUp);
 						if (isBoundDodge && isBoundJump)
 						{
 							ImGui::TextWrappedPadded("Dodge-Jump has relevant keybinds set.", 0.0F, 4.0F);
