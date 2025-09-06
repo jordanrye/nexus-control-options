@@ -141,7 +141,7 @@ namespace Tasks
 		{
 			if (isValidGameState())
 			{
-				APIDefs->GameBinds.InvokeAsync(EGameBinds_CameraZoomOut, 50);
+				APIDefs->GameBinds.InvokeAsync(EGameBinds_CameraZoomOut, 0);
 				zoomTicks--;
 
 				nextTick = std::chrono::system_clock::now().time_since_epoch() + delay;
